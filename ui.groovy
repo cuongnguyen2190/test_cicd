@@ -22,35 +22,35 @@ def set_params(poll) {
 
 
 def deploy(branch) {
-        def final_status_code = 0
+        // def final_status_code = 0
         stages {
             stage("Checkout source code") {
                 dir("/home/dev/docker/ui") {
-                    def result = sh(returnStatus: true, returnStdout: true, returnStderr: true, """
+                    sh(returnStatus: false, returnStdout: false, returnStderr: false, """
                         git reset --hard HEAD && git checkout \${branch}  && git pull
                     """)
-                    final_status_code += result.getStatus()
-                    print(result.getStdout())
+                    // final_status_code += result.getStatus()
+                    // print(result.getStdout())
                 }
             }
             stage("Build and deploy image") {
                 dir("/home/dev/docker/ui") {
-                    def result = sh(returnStatus: true, returnStdout: true, returnStderr: true, """
+                    sh(returnStatus: false, returnStdout: false, returnStderr: false, """
                         docker-compose up -d --build
                     """)
-                    final_status_code += result.getStatus()
-                    print(result.getStdout())
+                    // final_status_code += result.getStatus()
+                    // print(result.getStdout())
                 }
             }
             stage("Remove old image") {
-                def result = sh(returnStatus: true, returnStdout: true, returnStderr: true, """
+                sh(returnStatus: false, returnStdout: false, returnStderr: false, """
                     yes y | docker system prune
                 """)
-                final_status_code += result.getStatus()
-                print(result.getStdout())
+                // final_status_code += result.getStatus()
+                // print(result.getStdout())
             }
         }
-        return final_status_code
+        // return final_status_code
 }
 
 def run(args) {
@@ -65,7 +65,7 @@ def run(args) {
     utils = load "utils.groovy"
     print("OK")
     node("PC") {
-        exit_code = deploy(branch)
+        deploy(branch)
         if (exit_code > 0) {
             currentBuild.result = 'FAILURE'
         }
