@@ -61,14 +61,12 @@ def run(args) {
     //     poll = true
     // }
     print(branch)
-    set_params(poll)
+    // set_params(poll)
     utils = load "utils.groovy"
     print("OK")
-    node("PC") {
-        deploy(branch)
-        if (exit_code > 0) {
-            currentBuild.result = 'FAILURE'
-        }
+    deploy(branch)
+    if (exit_code > 0) {
+        currentBuild.result = 'FAILURE'
     }
 }
 
