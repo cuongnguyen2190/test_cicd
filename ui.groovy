@@ -28,7 +28,7 @@ def deploy(branch) {
                 dir("/home/dev/docker/ui") {
                     sh"""
                         git reset --hard HEAD && git checkout \${branch}  && git pull
-                    """)
+                    """
                     // final_status_code += result.getStatus()
                     // print(result.getStdout())
                 }
@@ -37,7 +37,7 @@ def deploy(branch) {
                 dir("/home/dev/docker/ui") {
                     sh"""
                         docker-compose up -d --build
-                    """)
+                    """
                     // final_status_code += result.getStatus()
                     // print(result.getStdout())
                 }
@@ -45,7 +45,7 @@ def deploy(branch) {
             stage("Remove old image") {
                 sh"""
                     yes y | docker system prune
-                """)
+                """
                 // final_status_code += result.getStatus()
                 // print(result.getStdout())
             }
