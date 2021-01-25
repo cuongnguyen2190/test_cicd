@@ -53,7 +53,9 @@ def deploy(branch) {
         return final_status_code
 }
 
-def start() {
+def run(args) {
+    project = args.project
+    branch = args.branch
     def poll = true
     // if (branch != null && branch.contains('master')) {
     //     poll = true
@@ -62,9 +64,11 @@ def start() {
     set_params(poll)
     utils = load "utils.groovy"
     print("OK")
-    exit_code = deploy(branch)
-    if (exit_code > 0) {
-        currentBuild.result = 'FAILURE'
+    node("PC") {
+        exit_code = deploy(branch)
+        if (exit_code > 0) {
+            currentBuild.result = 'FAILURE'
+        }
     }
 }
 
