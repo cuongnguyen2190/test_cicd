@@ -59,16 +59,16 @@ def run(args) {
     // if (branch != null && branch.contains('master')) {
     //     poll = true
     // }
-    print(branch)
+    print("tessssssss -------------------")
     set_params(poll)
     utils = load "utils.groovy"
-    print("OK")
-    node("PC") {
-        deploy(branch)
-        if (exit_code > 0) {
-            currentBuild.result = "FAILURE"
-        }
-    }
+    print("tessssssss -------------------")
+    // node("PC") {
+    //     deploy(branch)
+    //     if (exit_code > 0) {
+    //         currentBuild.result = "FAILURE"
+    //     }
+    // }
 }
 
 return this
