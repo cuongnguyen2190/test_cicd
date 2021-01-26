@@ -61,7 +61,7 @@ def deploy() {
     // utils = load "utils.groovy"
     print("tessssssss -------------------")
     node("PC") {
-        deploy(branch)
+        deploy("master")
         if (exit_code > 0) {
             currentBuild.result = "FAILURE"
         }
