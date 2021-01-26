@@ -51,7 +51,7 @@ def deploy(branch) {
         // return final_status_code
 }
 
-def deploy() {
+def run(args) {
     def poll = true
     // if (branch != null && branch.contains('master')) {
     //     poll = true
