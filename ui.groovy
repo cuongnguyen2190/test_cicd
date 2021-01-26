@@ -23,48 +23,51 @@ def set_params(poll) {
 
 def deploy(branch) {
         // def final_status_code = 0
-        stages {
-            stage("Checkout source code") {
-                dir("/home/dev/docker/ui") {
-                    sh"""
-                        git reset --hard HEAD && git checkout \${branch}  && git pull
-                    """
-                    // final_status_code += result.getStatus()
-                    // print(result.getStdout())
-                }
-            }
-            stage("Build and deploy image") {
-                dir("/home/dev/docker/ui") {
-                    sh"""
-                        docker-compose up -d --build
-                    """
-                    // final_status_code += result.getStatus()
-                    // print(result.getStdout())
-                }
-            }
-            stage("Remove old image") {
+        stage("Checkout source code") {
+            dir("/home/cuong/docker/ui") {
                 sh"""
-                    yes y | docker system prune
+                    git reset --hard HEAD && git checkout \${branch}  && git pull
                 """
                 // final_status_code += result.getStatus()
                 // print(result.getStdout())
             }
         }
+        stage("Build and deploy image") {
+            dir("/home/cuong/docker/ui") {
+                sh"""
+                    docker-compose up -d --build
+                """
+                // final_status_code += result.getStatus()
+                // print(result.getStdout())
+            }
+        }
+        stage("Remove old image") {
+            sh"""
+                yes y | docker system prune
+            """
+            // final_status_code += result.getStatus()
+            // print(result.getStdout())
+        }
         // return final_status_code
 }
 
-def start() {
+def run(args) {
+    project = args.project
+    branch = args.branch
+
     def poll = true
     // if (branch != null && branch.contains('master')) {
     //     poll = true
     // }
     print(branch)
-    // set_params(poll)
+    set_params(poll)
     utils = load "utils.groovy"
     print("OK")
-    deploy(branch)
-    if (exit_code > 0) {
-        currentBuild.result = 'FAILURE'
+    node("PC") {
+        deploy(branch)
+        if (exit_code > 0) {
+            currentBuild.result = "FAILURE"
+        }
     }
 }
 
