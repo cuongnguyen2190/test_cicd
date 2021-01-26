@@ -62,9 +62,9 @@ def deploy() {
     print("tessssssss -------------------")
     node("PC") {
         deploy("master")
-        if (exit_code > 0) {
-            currentBuild.result = "FAILURE"
-        }
+        // if (exit_code > 0) {
+        //     currentBuild.result = "FAILURE"
+        // }
     }
 }
 
