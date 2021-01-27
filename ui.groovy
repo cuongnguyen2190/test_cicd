@@ -27,26 +27,23 @@ def deploy(branch) {
             dir("/home/dev/docker/ui") {
                 def result = sh script:"""
                     git reset --hard HEAD && git checkout \${branch}  && git pull
-                """, returnStatus:true, returnStdout: true
-                final_status_code += result.getStatus()
-                print(result.getStdout())
+                """, returnStatus:true
+                final_status_code += result
             }
         }
         stage("Build and deploy image") {
             dir("/home/dev/docker/ui") {
                 def result = sh script:"""
                     docker-compose up -d --build
-                """, returnStatus:true, returnStdout: true
-                final_status_code += result.getStatus()
-                print(result.getStdout())
+                """, returnStatus:true
+                final_status_code += result
             }
         }
         stage("Remove old image") {
             def result = sh script:"""
                 yes y | docker system prune
-            """, returnStatus:true, returnStdout: true
-            final_status_code += result.getStatus()
-            print(result.getStdout())
+            """, returnStatus:true
+            final_status_code += result
         }
         return final_status_code
 }
