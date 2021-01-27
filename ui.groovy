@@ -22,33 +22,33 @@ def set_params(poll) {
 
 
 def deploy(branch) {
-        // def final_status_code = 0
+        def final_status_code = 0
         stage("Checkout source code") {
-            dir("/home/cuong/docker/ui") {
-                sh"""
+            dir("/home/dev/docker/ui") {
+                def result = sh script:"""
                     git reset --hard HEAD && git checkout \${branch}  && git pull
-                """
-                // final_status_code += result.getStatus()
-                // print(result.getStdout())
+                """, returnStatus:true, returnStdout: true
+                final_status_code += result.getStatus()
+                print(result.getStdout())
             }
         }
         stage("Build and deploy image") {
-            dir("/home/cuong/docker/ui") {
-                sh"""
+            dir("/home/dev/docker/ui") {
+                def result = sh script:"""
                     docker-compose up -d --build
-                """
-                // final_status_code += result.getStatus()
-                // print(result.getStdout())
+                """, returnStatus:true, returnStdout: true
+                final_status_code += result.getStatus()
+                print(result.getStdout())
             }
         }
         stage("Remove old image") {
-            sh"""
+            def result = sh script:"""
                 yes y | docker system prune
-            """
-            // final_status_code += result.getStatus()
-            // print(result.getStdout())
+            """, returnStatus:true, returnStdout: true
+            final_status_code += result.getStatus()
+            print(result.getStdout())
         }
-        // return final_status_code
+        return final_status_code
 }
 
 def deploy() {
@@ -61,10 +61,10 @@ def deploy() {
     // utils = load "utils.groovy"
     print("tessssssss -------------------")
     node("PC") {
-        deploy("master")
-        // if (exit_code > 0) {
-        //     currentBuild.result = "FAILURE"
-        // }
+        exit_code = deploy("master")
+        if (exit_code > 0) {
+            currentBuild.result = "FAILURE"
+        }
     }
 }
 
